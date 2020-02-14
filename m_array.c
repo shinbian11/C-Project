@@ -5,7 +5,7 @@
 	//모든 동물 짝을 찾기->게임 종료
 	//총 실패 횟수 알려주기
 int arrayAnimal[4][5]; //카드 표시(총 20장)
-int checkAnimal[4][5]; //뒤집혔는지의 여부 확인
+int checkAnimal[4][5] = { 0, }; //뒤집혔는지의 여부 확인
 
 char* strAnimal[10];
 void initAnimalArray();
@@ -27,7 +27,9 @@ int main()
 	initAnimalName();
 	shuffleAnimal();
 
+
 	int failCount = 0; //실패 횟수
+
 	while (1)
 	{
 		int select1 = 0; //선택 수 1
@@ -37,7 +39,7 @@ int main()
 		printQuestion(); //문제 출력(카드 지도)
 		printf("뒤집을 카드를 2개 고르세요...");
 		scanf("%d %d", &select1, &select2);
-		if (select1 == select2) 
+		if (select1 == select2) //select1 과 select2가 같으면 좌표가 1개밖에 안 나오므로 잘못된 입력!
 			continue;
 		
 		//좌표를 해당하는 카드를 뒤집어 보고 같은지 안같은지 확인
@@ -110,16 +112,23 @@ void initAnimalName()
 
 void shuffleAnimal()
 {
-	
+	/*
+	예를 들어 getEmptyPosition()를 호출했더니 19가 나왔다.그 19는 좌표로 환산하면 (3,4)인데
+	그 좌표가 만약 빈공간이라면(-1이 저장되어있다면) 19를 반환하고, 그 반환한 19를
+	shuffleAnimal 함수에서 다시 x,y좌표로 변환을 한다. 그리고 그 좌표에(빈공간에) 1번쨰 
+	동물인 원숭이를 배정한다. 즉 다시말해 (3,4)에는 "원숭이"가 들어가게되는 것이다. j가 0~1인 이유는,
+	다른 좌표에도 원숭이를 하나 더 넣어야 하므로, j를 두번 실행하게 한것이다!
+	*/
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			int pos = getEmptyPosition();
-			int x = conv_pos_x(pos);
-			int y = conv_pos_y(pos);
+			int pos = getEmptyPosition(); //빈 공간을 찾은다음
+			int x = conv_pos_x(pos); //그 빈공간의 x좌표
+			int y = conv_pos_y(pos); //y좌표에
 
-			arrayAnimal[x][y] = i;
+			arrayAnimal[x][y] = i; //동물들을 순서대로 배정한다.
+			
 		}
 	}
 }
@@ -156,7 +165,8 @@ void printAnimals()
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			printf("%8s", strAnimal[arrayAnimal[i][j]]);
+			printf("%8s", strAnimal[arrayAnimal[i][j]]); //arrayAnimal[i][j]에는 그 동물에 해당되는 숫자가 들어있다.
+			//즉 그 동물을 출력하려면 그 숫자를 출력하는것이 아니라 strAnimal[그 숫자]를 해야하는것이다.
 		}
 		printf("\n");
 	}
