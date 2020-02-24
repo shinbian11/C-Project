@@ -1,3 +1,4 @@
+//다차원 배열의 포인터
 #include <stdio.h>
 #define ROWS 4
 #define COLS 3
